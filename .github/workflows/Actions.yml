@@ -1,0 +1,26 @@
+name: actions_on_snapshot_branch
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - 'snapshot'
+
+jobs:
+  job1:
+    name: check_merger_snapshot
+    runs-on: ubuntu-latest
+    env:
+      NAME_ADMIN1: ${{ secrets.VERIFY_ADMIN1 }}
+      NAME_ADMIN2: ${{ secrets.VERIFY_ADMIN2 }}
+      NAME_ADMIN3: ${{ secrets.VERIFY_ADMIN3 }}
+
+    steps:
+      - name: st1
+        if: ${{ github.actor != env.NAME_ADMIN1 && github.actor != env.NAME_ADMIN2 && github.actor != env.NAME_ADMIN3 }}
+        run: exit 1
+      - name: st2
+        if: ${{ github.actor == env.NAME_ADMIN1 || github.actor == env.NAME_ADMIN2 || github.actor == env.NAME_ADMIN3 }}
+        run: echo "ok"
