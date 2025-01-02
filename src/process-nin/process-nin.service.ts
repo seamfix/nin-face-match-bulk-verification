@@ -14,6 +14,7 @@ import {
 } from './process-nin.dto';
 import { getMockImage } from './mock.base64.image';
 import { HelpersService, IFaceMatchRequest } from 'src/helpers/helpers.service';
+import { NeuroTechFaceMatchService } from 'src/helpers/neurotech/neurotech.service';
 
 @Injectable()
 export class ProcessNinService {
@@ -24,7 +25,8 @@ export class ProcessNinService {
     private readonly ninRecordsRepository: Repository<NinRecords>,
     @InjectRepository(NinLookup)
     private readonly ninLookupRepository: Repository<NinLookup>,
-    private readonly helpersService: HelpersService
+    private readonly helpersService: HelpersService,
+    private readonly neurotechFaceMatcService: NeuroTechFaceMatchService
   ) {}
 
   delay = async (ms: number) =>
@@ -213,7 +215,7 @@ export class ProcessNinService {
         mode
       }
 
-      const faceMatchResponse = await this.helpersService.faceMatch(payload)
+      const faceMatchResponse = await this.neurotechFaceMatcService.faceMatch(payload)
 
       // Hardcoded statuses for records found in the lookup
       await this.updateInvocationTable(
@@ -286,7 +288,7 @@ export class ProcessNinService {
               mode
             }
       
-            const faceMatchResponse = await this.helpersService.faceMatch(payload)
+            const faceMatchResponse = await this.neurotechFaceMatcService.faceMatch(payload)
 
             // Update the invocation table with success details
             await this.updateInvocationTable(
@@ -404,7 +406,7 @@ export class ProcessNinService {
               mode
             }
       
-            const faceMatchResponse = await this.helpersService.faceMatch(payload)
+            const faceMatchResponse = await this.neurotechFaceMatcService.faceMatch(payload)
 
             // Update the invocation table with success details
             await this.updateInvocationTable(
